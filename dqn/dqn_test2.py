@@ -5,7 +5,7 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 import tqdm
 import json
-import my_robot_env
+import my_robot_env2
 import robot_simulator
 
 def gym_env_step(env, action):
@@ -44,13 +44,14 @@ def load_action_list(filename="action_list.json"):
     return actions
 
 # 環境の作成
-env = my_robot_env.RobotEnv()
+env = my_robot_env2.RobotEnv()
 env.reset(seed=123)
 env.goal_x=-9
 env.goal_y=9
-
+env.obstacles=[(-1, -1), (-2, -4), (8, -9), (9, -6), (-8, 5), (-5, -10), (5, 6), (-5, 3), (2, 4), (3, -8), (-7, 0),(8,0),(0,1),(-1,0),(-5,4),(-5,5)]
+print(env.obstacles)
 # モデルのロード
-model = tf.keras.models.load_model("goal_model.h5")
+model = tf.keras.models.load_model("test_model.h5")
 
 # 初期観測の取得
 initial_observation = env.reset()[0]
@@ -90,7 +91,8 @@ with tqdm.trange(nb_episodes) as t:
 
 env.close()
 plt.plot(env.goal_x,env.goal_y, 'o', markersize=10, color='blue')  # ゴールをプロット
-
+for obs in env.obstacles:
+    plt.plot(obs[0],obs[1], 'o', markersize=10, color='green')  # ゴールをプロット
 sim.exec_animation()
 
 #     goal_x, goal_y = 5,3

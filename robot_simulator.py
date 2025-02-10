@@ -6,9 +6,12 @@ from matplotlib.animation import ArtistAnimation
 import time
 
 class Simulate():
-    def __init__(self):
+    def __init__(self,anime=False):
         #アニメーショングラフ描画のため
-        self.fig = plt.figure()
+        self.anime=False
+        if anime:
+            self.anime=True
+            self.fig = plt.figure()
         self.ims=[]
         self.state=[0,0,0]
         #計算データ（座標）の格納
@@ -65,7 +68,7 @@ class Simulate():
         return update_state
 
 
-    def simulation_twewheel(self,data,ini_state=[0,0,0],factor=1,td=6.36,anime=False):
+    def simulation_twewheel(self,data,ini_state=[0,0,0],factor=1,td=6.36):
         """
         data: list On/OFF data
         
@@ -83,7 +86,7 @@ class Simulate():
         dx = np.cos(thetat) * 0.5  # 矢印の長さ
         dy = np.sin(thetat) * 0.5
         
-        if anime:
+        if self.anime:
             #Plotのための設定
             plt.grid(True)
             plt.axis("equal")

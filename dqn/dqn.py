@@ -6,7 +6,7 @@ import gym
 import matplotlib.pyplot as plt
 import random
 from collections import deque
-import my_robot_env2
+import my_robot_env
 import random
 
 class EpsGreedyQPolicy:#εグリーディー法
@@ -155,7 +155,7 @@ def gym_env_step(env, action):
     return obs, reward, bool(terminated), bool(truncated), info
 
 #env = gym.make('CartPole-v1')
-env = my_robot_env2.RobotEnv()
+env = my_robot_env.RobotEnv()
 env.reset(seed=123)
 nb_actions = env.action_space.n#行動の種類
 actions = np.arange(nb_actions)#その状態で取れる行動
@@ -174,13 +174,13 @@ agent = DQNAgent(actions=actions, memory=memory, update_interval=200, train_inte
 step_history = []
 
 #実行エピソード数
-nb_episodes = 1000
+nb_episodes = 100
 
-for i in range(20):
-    obs_x=random.randint(-10,10)
-    obs_y=random.randint(-10,10)
-    env.obstacles.append((obs_x,obs_y))
-print(env.obstacles)  
+# for i in range(20):
+#     obs_x=random.randint(-10,10)
+#     obs_y=random.randint(-10,10)
+#     env.obstacles.append((obs_x,obs_y))
+# print(env.obstacles)  
 
 # env.obstacles=[(-1, -1), (-2, -4), (8, -9), (9, -6), (-8, 5), (-5, -10), (5, 6), (-5, 3), (2, 4), (3, -8), (-7, 0),(8,0)]
 with tqdm.trange(nb_episodes) as t:
@@ -216,16 +216,15 @@ with tqdm.trange(nb_episodes) as t:
                 if episode % 5 == 0: #５エピソードに１回ターゲットネットワークに学習モデルの重みをコピー
                     agent.update_target_hard()
                 #step_history.append(step)#各エピソードのステップ数を記録
-                step_history.append(env.collision)
+                step_history.append(step)
                 #ステップ数が少ないほどいい
                 #座標が10*10を超えたら強制終了
                 break
 
 env.close()
-model.save("test_model.h5")
+model.save("goal_model.h5")
 x = np.arange(len(step_history))
 plt.ylabel('step')
 plt.xlabel('episode')
 plt.plot(x, step_history)
 plt.savefig('result.png')
-print(env.obstacles)
