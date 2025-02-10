@@ -123,9 +123,5 @@ if __name__ == '__main__':
         dy_goal = goal_y - y
         theta_goal = math.degrees(math.atan2(dy_goal, dx_goal))  # ゴール方向の角度を度数法に変換
         print("goal_angle (degrees):", theta_goal)
-        # if angle_diff > 180:
-        #     angle_diff -= 360
-        # elif angle_diff < -180:
-        #     angle_diff += 360
         print("angle_diff:",theta_goal-thetat)
     sim.exec_animation()

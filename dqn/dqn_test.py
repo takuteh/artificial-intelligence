@@ -1,10 +1,12 @@
+import sys
+sys.path.append("..")
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
 import tqdm
 import json
 import my_robot_env2
-import simulator
+import robot_simulator
 
 def gym_env_step(env, action):
     obs, reward, terminated, truncated, info = env.step(action)
@@ -60,7 +62,7 @@ agent = TestAgent(model=model, policy=policy, observation=initial_observation)
 nb_episodes = 1
 step_history = []
 
-sim=simulator.Simulate()
+sim=robot_simulator.Simulate()
 actions=load_action_list()
 
 with tqdm.trange(nb_episodes) as t:

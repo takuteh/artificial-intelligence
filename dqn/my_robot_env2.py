@@ -1,12 +1,15 @@
+import sys
+sys.path.append("..")
 import numpy as np
 import gymnasium as gym
 from stable_baselines3 import DQN
 from stable_baselines3.common.env_checker import check_env
-import simulator
+import robot_simulator
 import math
 import json
 import matplotlib.pyplot as plt
 import torch
+
 def load_action_list(filename="action_list.json"):
     with open(filename, "r") as file:
         actions = json.load(file)
@@ -17,11 +20,11 @@ class RobotEnv(gym.Env):
         super(RobotEnv, self).__init__()
 
         #シミュレータをインスタンス化
-        self.sim = simulator.Simulate()
+        self.sim = robot_simulator.Simulate()
         self.actions=load_action_list()
         # 状態空間（連続的な観測データ）
         self.observation_space = gym.spaces.Box(
-            low=np.array([-180,-180,-180,-180,-100]), high=np.array([180,180,180,180,100]), dtype=np.float32
+            low=np.array([-180,-180,-180,-180,-100,0,0]), high=np.array([180,180,180,180,100,1,0.5]), dtype=np.float32
         )
 
         # 離散的な行動空間 (4つの選択肢)
@@ -68,9 +71,6 @@ class RobotEnv(gym.Env):
         
 
         reward -= abs(angle_diff)*0.1+distance_to_goal
-        #reward = 100/abs(self.goal_x-self.robot_x+0.01) + 100/abs(self.goal_y - self.robot_y+0.01) #-abs(0.01*angle_diff)
-        #if (self.robot_x-self.old_x)==0 and (self.robot_y-self.old_y)==0:
-        #    reward -= 10 
        
         self.old_distance=distance_to_goal
         self.old_x=self.robot_x
@@ -123,6 +123,7 @@ class RobotEnv(gym.Env):
             distance_tmp= self._calculate_distance(obs[0],obs[1],self.robot_x,self.robot_y)
             obstacle_angle=self._calculate_angle_diff(obs[0],obs[1],self.robot_x,self.robot_y,self.robot_angle)
             if distance_tmp < 0.5 and obstacle_angle < 5:#距離が0.5以内＆角度差が5度以内
+                print("obstacle detection!!")
                 distance_to_obstacle=distance_tmp
                 obstacle_detection=True
                 break

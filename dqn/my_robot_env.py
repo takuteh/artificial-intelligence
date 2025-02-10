@@ -1,12 +1,15 @@
+import sys
+sys.path.append("..")
 import numpy as np
 import gymnasium as gym
 from stable_baselines3 import DQN
 from stable_baselines3.common.env_checker import check_env
-import simulator
+import robot_simulator
 import math
 import json
 import matplotlib.pyplot as plt
 import torch
+
 def load_action_list(filename="action_list.json"):
     with open(filename, "r") as file:
         actions = json.load(file)
@@ -17,7 +20,7 @@ class RobotEnv(gym.Env):
         super(RobotEnv, self).__init__()
 
         #シミュレータをインスタンス化
-        self.sim = simulator.Simulate()
+        self.sim = robot_simulator.Simulate()
         self.actions=load_action_list()
         # 状態空間（連続的な観測データ）
         self.observation_space = gym.spaces.Box(

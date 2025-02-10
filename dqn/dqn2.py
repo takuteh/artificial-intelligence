@@ -8,7 +8,7 @@ import random
 from collections import deque
 import my_robot_env2
 import random
-import a
+
 class EpsGreedyQPolicy:#εグリーディー法
     def __init__(self, eps=0.1, eps_decay_rate=0.99, min_eps=0.1):
         self.eps = eps
@@ -174,7 +174,7 @@ agent = DQNAgent(actions=actions, memory=memory, update_interval=200, train_inte
 step_history = []
 
 #実行エピソード数
-nb_episodes = 100
+nb_episodes = 500
 
 # for i in range(20):
 #     obs_x=random.randint(-10,10)
