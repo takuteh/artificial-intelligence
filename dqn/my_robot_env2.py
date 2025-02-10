@@ -62,7 +62,8 @@ class RobotEnv(gym.Env):
         reward=0
         #遺伝子を元にロボットを移動
         gene=self.actions[action]
-        repeat=int(gene[1]/0.1)
+        repeat=round(gene[1]/0.1)
+        print(f"{repeat}回繰り返し")
         correct_action=[gene[0],0.1,gene[2],0.1]
 
         for i in range(repeat):
@@ -111,7 +112,7 @@ class RobotEnv(gym.Env):
             reward -=10
         # if self.robot_x>10 or self.robot_x <0 or self.robot_y>10 or self.robot_y<0:
         #     reward -= 100
-        if self.step_p>=800:
+        if self.step_p>=200:
             # reward -=100
             terminated=True
             self.step_p=0
@@ -143,7 +144,7 @@ class RobotEnv(gym.Env):
     def _get_obstacle(self,obstacles,robot_x,robot_y):
         obstacle_detection=False
         distance_to_obstacle=100
-        angle_to_obstacle=np.nan
+        angle_to_obstacle=180
         for obs in obstacles:
             distance_to_obstacle= self._calculate_distance(obs[0],obs[1],self.robot_x,self.robot_y)
             angle_to_obstacle=self._calculate_angle_diff(obs[0],obs[1],self.robot_x,self.robot_y,self.robot_angle)

@@ -174,13 +174,13 @@ agent = DQNAgent(actions=actions, memory=memory, update_interval=200, train_inte
 step_history = []
 
 #実行エピソード数
-nb_episodes = 1000
+nb_episodes = 100
 
-for i in range(20):
-    obs_x=random.randint(-10,10)
-    obs_y=random.randint(-10,10)
-    env.obstacles.append((obs_x,obs_y))
-print(env.obstacles)  
+# for i in range(20):
+#     obs_x=random.randint(-10,10)
+#     obs_y=random.randint(-10,10)
+#     env.obstacles.append((obs_x,obs_y))
+# print(env.obstacles)  
 
 # env.obstacles=[(-1, -1), (-2, -4), (8, -9), (9, -6), (-8, 5), (-5, -10), (5, 6), (-5, 3), (2, 4), (3, -8), (-7, 0),(8,0)]
 with tqdm.trange(nb_episodes) as t:
@@ -228,4 +228,4 @@ plt.ylabel('step')
 plt.xlabel('episode')
 plt.plot(x, step_history)
 plt.savefig('result.png')
-print(env.obstacles)
+#print(env.obstacles)

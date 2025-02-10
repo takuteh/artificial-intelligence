@@ -46,9 +46,9 @@ def load_action_list(filename="action_list.json"):
 # 環境の作成
 env = my_robot_env2.RobotEnv()
 env.reset(seed=123)
-env.goal_x=-9
-env.goal_y=9
-env.obstacles=[(-1, -1), (-2, -4), (8, -9), (9, -6), (-8, 5), (-5, -10), (5, 6), (-5, 3), (2, 4), (3, -8), (-7, 0),(8,0),(0,1),(-1,0),(-5,4),(-5,5)]
+env.goal_x=5
+env.goal_y=-9
+# env.obstacles=[(-1, -1), (-2, -4), (8, -9), (9, -6), (-8, 5), (-5, -10), (5, 6), (-5, 3), (2, 4), (3, -8), (-7, 0),(8,0),(0,1),(-1,0),(-5,4),(-5,5)]
 print(env.obstacles)
 # モデルのロード
 model = tf.keras.models.load_model("test_model.h5")
