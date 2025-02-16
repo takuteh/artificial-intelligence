@@ -1,3 +1,7 @@
+'''
+goal_only_env.pyの環境を学習する
+学習データは"goal_only_model.h5"に保存
+'''
 import numpy as np
 import tensorflow as tf
 import copy
@@ -6,8 +10,10 @@ import gym
 import matplotlib.pyplot as plt
 import random
 from collections import deque
-import my_robot_env2
 import random
+import sys
+sys.path.append("custom_env")
+import goal_only_env
 
 class EpsGreedyQPolicy:#εグリーディー法
     def __init__(self, eps=0.1, eps_decay_rate=0.99, min_eps=0.1):
@@ -155,7 +161,7 @@ def gym_env_step(env, action):
     return obs, reward, bool(terminated), bool(truncated), info
 
 #env = gym.make('CartPole-v1')
-env = my_robot_env2.RobotEnv()
+env = goal_only_env.RobotEnv()
 env.reset(seed=123)
 nb_actions = env.action_space.n#行動の種類
 actions = np.arange(nb_actions)#その状態で取れる行動
@@ -216,16 +222,15 @@ with tqdm.trange(nb_episodes) as t:
                 if episode % 5 == 0: #５エピソードに１回ターゲットネットワークに学習モデルの重みをコピー
                     agent.update_target_hard()
                 #step_history.append(step)#各エピソードのステップ数を記録
-                step_history.append(env.collision)
+                step_history.append(step)
                 #ステップ数が少ないほどいい
                 #座標が10*10を超えたら強制終了
                 break
 
 env.close()
-model.save("test_model.h5")
+model.save("goal_only_model.h5")
 x = np.arange(len(step_history))
 plt.ylabel('step')
 plt.xlabel('episode')
 plt.plot(x, step_history)
 plt.savefig('result.png')
-#print(env.obstacles)

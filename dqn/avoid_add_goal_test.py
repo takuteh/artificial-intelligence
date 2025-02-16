@@ -1,3 +1,9 @@
+'''
+avoid_add_goalで学習した結果"avoid_add_goal.h5"を
+読み込んで動作を試験する
+障害物のみであれば回避可能
+ゴールには到達できない
+'''
 import sys
 sys.path.append("..")
 import numpy as np
@@ -5,7 +11,9 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 import tqdm
 import json
-import robot_avoid_env
+import sys
+sys.path.append("custom_env")
+import avoid_add_goal_env
 import robot_simulator
 
 def gym_env_step(env, action):
@@ -44,11 +52,11 @@ def load_action_list(filename="action_list.json"):
     return actions
 
 # 環境の作成
-env = robot_avoid_env.RobotEnv()
+env = avoid_add_goal_env.RobotEnv()
 env.reset(seed=123)
 
 # モデルのロード
-model = tf.keras.models.load_model("avoid_model.h5", custom_objects={"mse": tf.keras.losses.MeanSquaredError()})
+model = tf.keras.models.load_model("avoid_add_goal_model.h5", custom_objects={"mse": tf.keras.losses.MeanSquaredError()})
 
 # 初期観測の取得
 initial_observation = env.reset()[0]

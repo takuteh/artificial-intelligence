@@ -1,7 +1,3 @@
-'''
-robot_avoid_env.pyを読み込んで学習をするプログラム
-学習データは"avoid_model.h5"に保存される
-'''
 import numpy as np
 import tensorflow as tf
 import copy
@@ -10,7 +6,9 @@ import gym
 import matplotlib.pyplot as plt
 import random
 from collections import deque
-import robot_avoid_env
+import sys
+sys.path.append("custom_env")
+import goal_add_avoid_env
 import random
 
 class EpsGreedyQPolicy:#εグリーディー法
@@ -159,7 +157,7 @@ def gym_env_step(env, action):
     return obs, reward, bool(terminated), bool(truncated), info
 
 #env = gym.make('CartPole-v1')
-env = robot_avoid_env.RobotEnv()
+env = goal_add_avoid_env.RobotEnv()
 env.reset(seed=123)
 nb_actions = env.action_space.n#行動の種類
 actions = np.arange(nb_actions)#その状態で取れる行動
@@ -178,29 +176,28 @@ agent = DQNAgent(actions=actions, memory=memory, update_interval=200, train_inte
 step_history = []
 
 #実行エピソード数
-nb_episodes = 200
+nb_episodes = 100
 
+# for i in range(20):
+#     obs_x=random.randint(-10,10)
+#     obs_y=random.randint(-10,10)
+#     env.obstacles.append((obs_x,obs_y))
+# print(env.obstacles)  
+
+# env.obstacles=[(-1, -1), (-2, -4), (8, -9), (9, -6), (-8, 5), (-5, -10), (5, 6), (-5, 3), (2, 4), (3, -8), (-7, 0),(8,0)]
 with tqdm.trange(nb_episodes) as t:
     for episode in t:#環境リセット
         observation, _ = env.reset()
-        env.obstacles=[]
-        
-        env.obstacles=[(1,0)]
-        #ロボットの初期座標の角度をランダムにする
-        test=random.random()
-        if test <0.3:
-            second=random.randint(1,20)
-        else:
-            second=random.choice([random.uniform(0,1),random.uniform(19,20)])
-        print("ランダムに旋回")
-        env.sim.simulation_twewheel([1,second,-1,second])
-        print("reset:x,y,theta->",env.robot_x,env.robot_y,env.robot_angle)
-        
         agent.observe(observation)
         done = False
         step = 0
         episode_reward_history = []
-
+        env.goal_x=random.randint(-10,10)
+        env.goal_y=random.randint(-10,10)
+        #env.goal_angle=90#random.randint(-180,180)
+        #env.goal_x=5
+        #env.goal_y=5
+        print(f"goal:({env.goal_x,env.goal_y})")
         while not done:#1エピソードのループ
             #DQNから次の行動を取得
             action = agent.act()
@@ -227,7 +224,7 @@ with tqdm.trange(nb_episodes) as t:
                 break
 
 env.close()
-model.save("avoid_model.h5")
+model.save("goal_add_avoid_model.h5")
 x = np.arange(len(step_history))
 plt.ylabel('step')
 plt.xlabel('episode')
